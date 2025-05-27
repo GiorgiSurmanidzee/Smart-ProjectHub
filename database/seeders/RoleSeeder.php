@@ -8,12 +8,8 @@ use Spatie\Permission\Models\Role;
 
 class RoleSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-
         $permissions = [
             'create articles',
             'edit articles',
@@ -23,16 +19,28 @@ class RoleSeeder extends Seeder
         ];
 
         foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission]);
+            Permission::firstOrCreate([
+                'name' => $permission,
+                'guard_name' => 'api'
+            ]);
         }
 
-        $writer = Role::firstOrCreate(['name' => 'writer']);
+        $writer = Role::firstOrCreate([
+            'name' => 'writer',
+            'guard_name' => 'api'
+        ]);
         $writer->givePermissionTo(['create articles', 'edit articles']);
 
-        $admin = Role::firstOrCreate(['name' => 'admin']);
+        $admin = Role::firstOrCreate([
+            'name' => 'admin',
+            'guard_name' => 'api'
+        ]);
         $admin->givePermissionTo(Permission::all());
 
-        $editor = Role::firstOrCreate(['name' => 'editor']);
+        $editor = Role::firstOrCreate([
+            'name' => 'editor',
+            'guard_name' => 'api'
+        ]);
         $editor->givePermissionTo(['publish articles', 'unpublish articles']);
     }
 }
