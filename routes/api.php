@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Route;
 Route::post("/register", [UserController::class, 'register']);
 Route::post("/login", [UserController::class, 'login']);
 
-
-Route::middleware([JwtMiddleware::class, 'role:admin'])->group(function () {
+Route::middleware([JwtMiddleware::class, 'role:admin|project manager'])->group(function () {
     Route::post('/project', [ProjectController::class, 'store'])->name('store.project');
 });

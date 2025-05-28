@@ -7,9 +7,6 @@ use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $user1 = User::create([
@@ -25,5 +22,12 @@ class UserSeeder extends Seeder
             'password' => bcrypt('password'),
         ]);
         $user2->assignRole('project manager');
+
+        $user3 = User::create([
+            'email' => 'client@example.com',
+            'name' => 'Client User',
+            'password' => bcrypt('password'),
+        ]);
+        $user3->assignRole('client');
     }
 }
