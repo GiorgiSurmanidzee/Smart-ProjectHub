@@ -2,53 +2,50 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\loginUserRequest;
+use App\Http\Requests\registerUserRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
 
 class UserController extends Controller
 {
-    public function register(Request $request)
+    public function register(registerUserRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        }
-
         $user = User::create([
             'name' => $request->get('name'),
             'email' => $request->get('email'),
             'password' => Hash::make($request->get('password')),
         ]);
-        $user->assignRole('admin', 'api');
-
         $token = JWTAuth::fromUser($user);
-
         return response()->json(compact('user', 'token'), 201);
     }
 
-    public function login(Request $request)
-    {
-        $credentials = $request->only('email', 'password');
 
+    public function login(loginUserRequest $request)
+    {
         try {
-            if (! $token = JWTAuth::attempt($credentials)) {
+            if (!$token = JWTAuth::attempt($request->all())) {
                 return response()->json(['error' => 'Invalid credentials'], 401);
             }
-
             $user = auth()->user();
-            $token = JWTAuth::claims(['role' => $user->role])->fromUser($user);
 
-            return response()->json(compact('token'));
+            $roles = $user->getRoleNames();
+            $permissions = $user->getAllPermissions()->pluck('name');
+
+            $token = JWTAuth::claims([
+                'roles' => $roles->toArray(),
+                'permissions' => $permissions->toArray()
+            ])->fromUser($user);
+
+            return response()->json([
+                'token' => $token,
+                'user' => $user,
+                'roles' => $roles,
+                'permissions' => $permissions
+            ]);
         } catch (JWTException $e) {
             return response()->json(['error' => 'Could not create token'], 500);
         }
