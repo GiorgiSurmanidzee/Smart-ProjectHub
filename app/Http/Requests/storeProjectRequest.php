@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Requests;
+
 use Illuminate\Foundation\Http\FormRequest;
 
 class storeProjectRequest extends FormRequest
@@ -21,14 +22,15 @@ class storeProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'start_date' => 'required|date|date_format:Y-m-d',
-            'end_date' => 'nullable|date|date_format:Y-m-d|after_or_equal:start_date',
-            'status' => 'required|in:pending,active,completed,canceled',
-            'priority' => 'required|in:low,medium,high',
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'start_date' => ['required', 'date', 'date_format:Y-m-d'],
+            'end_date' => ['nullable', 'date', 'date_format:Y-m-d', 'after_or_equal:start_date'],
+            'status' => ['required', 'in:pending,active,completed,canceled'],
+            'priority' => ['required', 'in:low,medium,high'],
         ];
     }
+
 
 
     public function messages(): array
