@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\loginUserRequest;
 use App\Http\Requests\registerUserRequest;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
@@ -49,7 +48,7 @@ class UserController extends Controller
     public function getUser()
     {
         try {
-            if (! $user = JWTAuth::parseToken()->authenticate()) {
+            if (!$user = JWTAuth::parseToken()->authenticate()) {
                 return response()->json(['error' => 'User not found'], 404);
             }
         } catch (JWTException $e) {

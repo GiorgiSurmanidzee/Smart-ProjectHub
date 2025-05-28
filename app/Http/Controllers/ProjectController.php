@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\ApiResponseClass;
 use App\Http\Requests\storeProjectRequest;
 use App\Models\Project;
 
@@ -12,10 +13,6 @@ class ProjectController extends Controller
         $validated = $request->validated();
         $project = Project::create($validated);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Project created successfully',
-            'data' => $project
-        ], 201);
+        return ApiResponseClass::sendResponse($project, 'Project created successfully', 201);
     }
 }
