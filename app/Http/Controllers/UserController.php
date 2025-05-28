@@ -14,15 +14,10 @@ class UserController extends Controller
 {
     public function register(registerUserRequest $request)
     {
-        $user = User::create([
-            'name' => $request->get('name'),
-            'email' => $request->get('email'),
-            'password' => Hash::make($request->get('password')),
-        ]);
+        $user = User::create($request->all());
         $token = JWTAuth::fromUser($user);
         return response()->json(compact('user', 'token'), 201);
     }
-
 
     public function login(loginUserRequest $request)
     {
