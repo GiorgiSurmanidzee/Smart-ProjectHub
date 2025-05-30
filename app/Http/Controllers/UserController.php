@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\ApiResponseClass;
 use App\Http\Requests\loginUserRequest;
 use App\Http\Requests\registerUserRequest;
 use App\Models\User;
@@ -23,12 +24,12 @@ class UserController extends Controller
     {
         try {
             if (!$token = JWTAuth::attempt($request->all())) {
-                return response()->json(['error' => 'Invalid credentials'], 401);
+                return ApiResponseClass::sendError("Invalid credentials", 401);
             }
             $user = auth()->user();
 
             $roles = $user->getRoleNames();
-            $permissions = $user->getAllPermissions()->pluck('name');
+            $permissions = $user->getAllPermissions();
 
             $token = JWTAuth::claims([
                 'roles' => $roles->toArray(),
@@ -42,7 +43,7 @@ class UserController extends Controller
                 'permissions' => $permissions
             ]);
         } catch (JWTException $e) {
-            return response()->json(['error' => 'Could not create token'], 500);
+            return ApiResponseClass::sendError("'Could not create token", 500);
         }
     }
 
@@ -50,10 +51,10 @@ class UserController extends Controller
     {
         try {
             if (!$user = JWTAuth::parseToken()->authenticate()) {
-                return response()->json(['error' => 'User not found'], 404);
+                return ApiResponseClass::sendError("User not found", 404);
             }
         } catch (JWTException $e) {
-            return response()->json(['error' => 'Invalid token'], 400);
+            return ApiResponseClass::sendError("Invalid token", 400);
         }
 
         return response()->json(compact('user'));
@@ -62,7 +63,6 @@ class UserController extends Controller
     public function logout()
     {
         JWTAuth::invalidate(JWTAuth::getToken());
-
-        return response()->json(['message' => 'Successfully logged out']);
+        return ApiResponseClass::sendError("Successfully logged out", 204);
     }
 }
