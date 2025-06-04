@@ -23,24 +23,15 @@ class UserController extends Controller
     public function login(loginUserRequest $request)
     {
         try {
-            if (!$token = JWTAuth::attempt($request->all())) {
+            if (!$token = JWTAuth::attempt($request->validated())) {
                 return ApiResponseClass::sendError("Invalid credentials", 401);
             }
             $user = auth()->user();
-
-            $roles = $user->getRoleNames();
-            $permissions = $user->getAllPermissions();
-
-            $token = JWTAuth::claims([
-                'roles' => $roles->toArray(),
-                'permissions' => $permissions->toArray()
-            ])->fromUser($user);
+            $user->load('roles.permissions');
 
             return response()->json([
                 'token' => $token,
                 'user' => $user,
-                'roles' => $roles,
-                'permissions' => $permissions
             ]);
         } catch (JWTException $e) {
             return ApiResponseClass::sendError("'Could not create token", 500);
