@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
@@ -23,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureModels();
         $this->configureURL();
+        $this->configureDates();
     }
 
     /**
@@ -39,5 +42,13 @@ class AppServiceProvider extends ServiceProvider
     private function configureURL(): void
     {
         URL::forceScheme('https');
+    }
+
+    /**
+     * Configure the application's dates.
+     */
+    private function configureDates(): void
+    {
+        Date::use(CarbonImmutable::class);
     }
 }
