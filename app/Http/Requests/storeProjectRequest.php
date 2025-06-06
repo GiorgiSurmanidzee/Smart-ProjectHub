@@ -31,8 +31,6 @@ class storeProjectRequest extends FormRequest
         ];
     }
 
-
-
     public function messages(): array
     {
         return [

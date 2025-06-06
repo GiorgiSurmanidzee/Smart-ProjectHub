@@ -8,11 +8,11 @@ class ApiResponseClass
     {
         $response = [
             'success' => true,
-            'data' => $result
+            'data' => $result,
         ];
-        if (!empty($message)) {
+        if (! empty($message)) {
             $response['message'] = $message;
-        };
+        }
 
         return response()->json($response, $code);
     }
@@ -20,8 +20,8 @@ class ApiResponseClass
     public static function sendError($message, $code = 400)
     {
         $response = [
-            "success" => false,
-            "message" => $message
+            'success' => false,
+            'message' => $message,
         ];
 
         return response()->json($response, $code);

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string("description");
+            $table->string('description');
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->enum('priority', ['low', 'medium', 'high'])->default('medium');

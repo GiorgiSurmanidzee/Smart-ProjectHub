@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  */
-
 class Project extends Model
 {
     protected $fillable = ['name', 'description', 'start_date', 'end_date', 'priority', 'status'];

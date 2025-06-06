@@ -21,11 +21,10 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  */
-
 class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, HasRoles, Notifiable;
 
     protected $guard_name = 'api';
 
@@ -34,7 +33,6 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'password',
     ];
-
 
     public function organization(): BelongsTo
     {
